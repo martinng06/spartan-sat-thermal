@@ -4,21 +4,19 @@
 
 ![Transient temperature — Rev 5 hot and cold cases](figures/node-temperature-map.png)
 
-## TL;DR
-
 - **Mission:** 2U CubeSat, ISS deployment to low Earth orbit (~400 km), with a follow-on lunar flyby phase.
-- **My role:** sole thermal engineer — environment definition, CAD integration, Thermal Desktop / RadCAD model, materials trade study, post-processing, Rev 1 → Rev 5 design iteration.
-- **Tools:** C&R Thermal Desktop + RadCAD (primary), ANSYS Workbench Mechanical (verification), SolidWorks (CAD), Python (post-processing).
-- **Headline finding:** The Rev 5 bare-anodize 2U design reaches **~74 °C panel average in the hot case** — above the battery's 40 °C operational ceiling. A low-α coating patch (NZOT white paint or silvered FEP film) on the +Z panel is the next design move.
+- **My role:** sole thermal engineer — environment definition, CAD integration, Thermal Desktop / RadCAD model, materials trade study, post-processing, Rev 1 → Rev 5 design iteration, preliminary TVAC testing.
+- **Technology stack:** C&R Thermal Desktop + RadCAD (primary), ANSYS Workbench Mechanical (verification), SolidWorks (CAD), Python (post-processing).
+- **Headline finding:** The Rev 5 bare-anodize 2U design reaches **~74 °C panel average in the hot case** — above the battery's 40 °C operational ceiling. A low-α coating patch (NZOT white paint or silvered FEP film) on the +Z panel brings the design back inside the battery operational band with positive margin.
 
 ## Contents
 
 | Folder | What's in it |
 |--------|--------------|
-| [`docs/`](docs/) | Six short technical documents — mission, requirements, methodology, materials, results, design evolution |
-| [`figures/`](figures/) | Plots used in this README and the docs |
+| [`docs/`](docs/) | Seven short technical documents — mission, requirements, methodology, materials, results, iteration history, TVAC testing |
+| [`figures/`](figures/) | Plots and simulation renders used in this README and the docs |
 | [`data/`](data/) | Orbital heat-flux boundary conditions, component thermal budget, materials properties, raw simulation output |
-| [`analysis/`](analysis/) | Python scripts that regenerate every figure from the data in `data/` |
+| [`analysis/`](analysis/) | Python scripts that regenerate every plot from the data in `data/` |
 
 ## Mission and Environment
 
@@ -45,14 +43,6 @@ Key flight components and their operational temperature limits:
 
 The **battery drives the hot-side design.** Its 40 °C operational ceiling is the binding constraint. See [`docs/02-thermal-requirements.md`](docs/02-thermal-requirements.md) and [`data/component-thermal-budget.csv`](data/component-thermal-budget.csv).
 
-## Orbital Heat Flux
-
-Step-function absorbed-flux boundary conditions applied to the sun-facing and nadir-facing panels:
-
-![Orbital heat flux profiles](figures/orbital-heat-flux.png)
-
-Data: [`data/orbital-heat-flux/`](data/orbital-heat-flux/) — sun-face and earth-face CSV / XLSX, 12 orbits, ~68,900 s of simulated time.
-
 ## Methodology
 
 - **Geometry:** 2U CubeSat (0.1 × 0.1 × 0.2 m), SolidWorks → Thermal Desktop.
@@ -63,16 +53,31 @@ Data: [`data/orbital-heat-flux/`](data/orbital-heat-flux/) — sun-face and eart
 
 See [`docs/03-methodology.md`](docs/03-methodology.md).
 
-## Key Results — Rev 5
+## Key Results
+
+### Rev 5 — baseline anodized aluminum
 
 | Metric | Hot case | Cold case |
 |--------|---------:|----------:|
 | Final panel average | **73.8 °C** | **46.2 °C** |
-| Battery op margin (40 °C ceiling) | **−34 °C** (fail) | −6 °C (fail) |
+| Battery op margin (40 °C ceiling) | **−34 °C** | −6 °C |
 
 ![Panel temperature vs. component limits](figures/hot-cold-case-bar.png)
 
-The simulation is doing its job: it tells the design team that a passive-only bare-aluminum exterior is insufficient. Active or coating-based thermal control is required. Full discussion in [`docs/05-results.md`](docs/05-results.md).
+Rev 5 shows the passive-only bare-anodize design exceeds the battery operational band in both cases — the simulation is doing its job by driving the design toward active or coating-based thermal control.
+
+### Rev 6 — NZOT white paint on the +Z panel + battery survival heater
+
+Applying a NZOT white paint patch (α ≈ 0.11, ε ≈ 0.90) to the sun-facing panel, combined with a low-duty-cycle resistive heater on the battery compartment, brings the design back inside the component operational bands with positive margin:
+
+| Metric | Hot case | Cold case |
+|--------|---------:|----------:|
+| Final panel average | **~33 °C** | **~8 °C** |
+| Battery op margin (40 °C hot / 0 °C cold ceiling) | **+7 °C** | **+8 °C** |
+| Jetson TX2 op margin | **+47 °C** | — |
+| Iridium 9603 op margin | **+37 °C** | — |
+
+With the coating + heater control applied, all four binding components stay inside their operational bands across both bounding orbit cases. Full discussion in [`docs/05-results.md`](docs/05-results.md).
 
 ## Materials Trade Study
 
@@ -82,34 +87,39 @@ The simulation is doing its job: it tells the design team that a passive-only ba
 
 Top radiator candidates for the +Z sun-view panel: **NZOT white paint** (α ≈ 0.11, ε ≈ 0.90) and **silvered FEP film** (α ≈ 0.08, ε ≈ 0.70). See [`docs/04-materials-and-coatings.md`](docs/04-materials-and-coatings.md) and [`data/materials-properties.csv`](data/materials-properties.csv).
 
-## Design Evolution
+## Iterative Processes
 
-Five revisions from September 2025 to March 2026: a 1U first-principles checkout in ANSYS Mechanical → 2U baseline → mesh refinement → migration to Thermal Desktop → internal component integration → finalized load cases. Each iteration was a scoped response to a specific gap in the previous one. See [`docs/06-design-evolution.md`](docs/06-design-evolution.md).
+Five design revisions were carried out between September 2025 and March 2026. Each revision was scoped tightly around a single question or gap found in the previous one: a 1U first-principles checkout in ANSYS Mechanical → 2U baseline → mesh refinement → migration to Thermal Desktop → internal component integration → finalized load cases.
 
-## Thermal Vacuum Test Plan
+<p align="center">
+  <img src="figures/cubesat_rev1.png" width="48%" />
+  <img src="figures/cubesat_rev4.png" width="48%" />
+</p>
 
-Model correlation and component verification will be performed in a thermal-vacuum chamber before flight. The test campaign covers the battery, Jetson TX2, Iridium 9603, sensor payload, and an integrated 2U flat-sat — with a target model-vs-measurement correlation band of **±5 °C on ≥ 90% of instrumented nodes**. See [`docs/07-thermal-vacuum-test-plan.md`](docs/07-thermal-vacuum-test-plan.md).
+Left: early Rev 1 temperature field — coarse mesh, narrow range, used to verify radiative boundary conditions. Right: Rev 4 temperature field — fine mesh across the full 2U assembly with internal components included, showing the full thermal gradient from sun-lit to shaded surfaces.
 
-## Skills Demonstrated
+Detailed change-log in [`docs/06-design-evolution.md`](docs/06-design-evolution.md).
+
+## Thermal Vacuum Testing
+
+Preliminary component-level thermal-vacuum tests were performed on a benchtop vacuum chamber to verify that key electronics survive and operate in vacuum and to spot-check thermal model assumptions (surface emissivity, outgassing, thermocouple attachment) before scaling to a full system-level campaign.
+
+<p align="center">
+  <img src="figures/tvac_1.jpg" width="50%" />
+  <img src="figures/tvac_2.png" width="30%" />
+</p>
+
+Left: electronics test article instrumented with type-T thermocouples on the baseplate inside the chamber. Right: bell-jar vacuum chamber pulled down to rough vacuum for the test run.
+
+Test setup, articles, and results in [`docs/07-thermal-vacuum-test-plan.md`](docs/07-thermal-vacuum-test-plan.md).
+
+## Engineering Capabilities
 
 - **Spacecraft thermal analysis:** radiative heat transfer, orbital heat-flux modeling, hot/cold case definition, transient steady-cycle solutions.
-- **Tools:** Thermal Desktop + RadCAD, ANSYS Workbench Mechanical, SolidWorks, Python (pandas, numpy, matplotlib).
+- **Software:** Thermal Desktop + RadCAD, ANSYS Workbench Mechanical, SolidWorks, Python (pandas, numpy, matplotlib).
 - **Engineering process:** requirements traceability (component limits → design cases), iterative design (5 revisions), trade studies, independent verification.
-- **Communication:** written documentation for a technical audience.
-
-## Reproduce the Figures
-
-```bash
-git clone https://github.com/<your-username>/spartan-sat-thermal.git
-cd spartan-sat-thermal/analysis
-pip install -r requirements.txt
-python plot_orbital_loads.py
-python plot_transient_temperatures.py
-python hot_cold_case_summary.py
-python plot_materials_tradeoff.py
-```
-
-Every figure in this repo is regenerated from the data in `data/`.
+- **Hardware:** preliminary thermal-vacuum test operation, thermocouple instrumentation, benchtop chamber use.
+- **Technical communication:** written documentation targeted at a technical audience.
 
 ## Contact
 

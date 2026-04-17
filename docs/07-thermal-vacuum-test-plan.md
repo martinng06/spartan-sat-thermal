@@ -1,81 +1,61 @@
-# 07 — Thermal Vacuum Test Plan
+# 07 — Preliminary Thermal Vacuum Testing
 
-Before flight, the Spartan Sat thermal model and component selections must be correlated against hardware data under representative vacuum and temperature conditions. This document lays out the planned test campaign for the thermal subsystem.
+Before committing to a full system-level test campaign, a set of preliminary thermal-vacuum (TVAC) tests were run on a benchtop vacuum chamber. The goal at this stage was **not** flight qualification — it was to shake out the test workflow, verify instrumentation, and check whether the thermal-model assumptions about emissivity and convection-loss behaved as expected in rough vacuum.
 
-## Purpose
+## Facility
 
-The test campaign has three objectives:
+Small benchtop bell-jar vacuum chamber in the SJSU lab. Rough vacuum only (mechanical pump, no turbo / cryo stages), so the achievable pressure was in the ~10⁻² Torr range — sufficient to kill convective heat transfer, which is what mattered for the model-correlation question. No LN₂ cold shroud.
 
-1. **Verify operating range.** Confirm each thermal-critical component (battery, Jetson compute, Iridium comms, solar panels, sensors) survives and operates across its specified temperature range in vacuum.
-2. **Correlate the thermal model.** Adjust Rev 5 model parameters (coating α/ε, contact conductances, internal dissipation) until predicted and measured temperatures agree within a defined tolerance.
-3. **Verify the control strategy.** Exercise the battery survival heater and any active thermal-control loops to confirm they hold the battery within its 0–40 °C operational band during cold-soak and hot-dwell.
+<p align="center">
+  <img src="../figures/tvac_2.png" width="40%" />
+</p>
 
 ## Test Articles
 
-| Article | Test type | Rationale |
-|---------|-----------|-----------|
-| **Battery (Cannon BP955) assembly** | Component TVAC | Binding hot-side constraint; verifies capacity retention at operational temperature extremes |
-| **Jetson TX2 compute module** | Component TVAC, thermal cycling | High heat dissipation; verify boot / throttle behavior across operational range |
-| **Iridium 9603 SBD transceiver** | Component TVAC | Verify RF link performance and IC derating behavior at temperature extremes |
-| **Primary sensor payload** (IMU, temperature sensors, camera module) | Component TVAC | Verify bias drift, dark current, and operational continuity |
-| **Integrated 2U flat-sat** | System-level TVAC | End-to-end model correlation under combined hot / cold orbital profiles |
+Preliminary runs focused on individual electronics test articles rather than the full 2U stack:
 
-## Facility Requirements
+- A small PCB assembly representative of the kind of thermal mass the flight electronics present.
+- Standalone resistive heater elements on aluminum baseplates (used to simulate component dissipation).
+- Temperature sensors (type-T thermocouples) both on the article and on the chamber baseplate as reference.
 
-| Parameter | Value |
-|-----------|-------|
-| Chamber vacuum level | ≤ 1 × 10⁻⁵ Torr |
-| LN₂-cooled shroud | Yes (deep-space cold sink simulation, target ≤ 100 K) |
-| IR-lamp solar simulation (for system test) | Yes, calibrated to ~1419 W/m² for hot case |
-| Thermocouple channels | ≥ 32 (component, structure, shroud) |
-| Data acquisition rate | ≥ 1 Hz |
-| Vacuum-compatible heater plates | For component-level hot dwells |
+<p align="center">
+  <img src="../figures/tvac_1.jpg" width="55%" />
+</p>
 
-Target facility: SJSU / university small-satellite lab, or partner facility with an existing 1 m-class TVAC chamber. Chamber selection is part of Rev 6 planning.
-
-## Test Matrix
-
-### Component-Level TVAC (per component)
-
-| Phase | Temperature | Duration | Purpose |
-|-------|-------------|----------|---------|
-| 1. Pre-test ambient characterization | +20 °C, 1 atm | 30 min | Baseline functional check |
-| 2. Pump-down | +20 °C, vacuum | 60 min | Outgassing verification |
-| 3. Cold survival soak | Survival min | 4 h | Survive-only, no power-on |
-| 4. Cold operational | Op min | 2 h | Full functional cycle at cold op limit |
-| 5. Hot operational | Op max | 2 h | Full functional cycle at hot op limit |
-| 6. Hot survival soak | Survival max | 4 h | Survive-only |
-| 7. Return to ambient | +20 °C | 30 min | Post-test functional check |
-
-Cold/hot limits per component come from [`docs/02-thermal-requirements.md`](02-thermal-requirements.md).
-
-### System-Level TVAC (integrated 2U)
-
-A single orbital-cycle simulation with the IR lamp gated on/off per the hot and cold case heat-flux profiles in [`data/orbital-heat-flux/`](../data/orbital-heat-flux/). Two full orbit cycles per case, with the instrumented +Z panel and internal components logged at 1 Hz.
+Test article on the aluminum baseplate, instrumented with type-T thermocouples bonded to the component and routed out through the chamber feedthrough.
 
 ## Instrumentation
 
-- Type-T thermocouples on: battery case, Jetson TX2 heat spreader, Iridium can, each solar panel, four locations on each external face, each internal structural bracket. Target ~32 channels.
-- Strain-relieved wiring via vacuum feedthrough; bonded using Kapton tape (no adhesives that outgas).
-- Separate calibration pass on all TCs before the test pump-down.
+- **Type-T thermocouples** — 4 to 6 channels per run, bonded with Kapton tape on the article, the baseplate, and a chamber-wall reference point.
+- **Handheld DAQ** logging at ~1 Hz during each run.
+- **Vacuum gauge** on the chamber for pressure-vs-time logging during pump-down and dwell.
 
-## Pass / Fail Criteria
+## What the Preliminary Runs Looked Like
 
-| Criterion | Pass threshold |
-|-----------|----------------|
-| Component survival | No permanent degradation after survival soaks; functional after return to ambient |
-| Component operation | Full operational functionality maintained within op range |
-| Model correlation (per node) | Measured vs. predicted within **±5 °C** for at least 90% of instrumented nodes |
-| Battery heater duty cycle | Holds battery > 5 °C during cold-soak, with ≥ 20% duty-cycle margin |
+Each run followed a simple three-phase profile — the full-campaign version of this will go in the Rev 6 test plan later.
 
-A test that fails to meet the correlation band triggers a Rev 6 model update (adjust coating α/ε, contact conductance, or internal dissipation) and a re-run of the simulation before any hardware re-test.
+1. **Ambient check.** Article at ambient pressure and room temperature. Turn on resistive heater. Log the steady-state component temperature to get a baseline with natural convection present.
+2. **Pump-down and vacuum dwell.** Evacuate to working vacuum (~10⁻² Torr). Hold the same heater power for 15–30 min. The component runs hotter than ambient because the convection path is gone and radiation is the only remaining sink — a first-order check that matches the intent of the flight thermal model.
+3. **Return to ambient.** Vent, let the article cool, verify nothing was damaged.
 
-## Schedule
+## What We Confirmed
 
-This is a forward-looking plan. Test readiness is gated on: (a) completion of the Rev 6 design iteration with the coating patch on the +Z panel, (b) flight-like battery and Jetson TX2 units being available, and (c) chamber time being allocated. Estimated earliest start: late 2026.
+- **Convection really does dominate at ambient** for these small electronics. Removing it pushed steady-state temperatures up by tens of degrees at the same heater power — qualitatively consistent with the radiation-only boundary condition used in the flight model.
+- **Thermocouple + Kapton attachment survives pump-down and venting cleanly.** Bond quality is the biggest source of scatter in the readings; a lesson carried forward into the Rev 6 test plan.
+- **The benchtop chamber is the right tool for model spot-checks, not for flight qualification.** Achievable vacuum level, shroud temperature, and IR simulation are all limited. Component qualification and system-level testing will need a proper TVAC facility with LN₂ shrouding — that's Rev 6 scope.
+
+## Limitations
+
+- Rough vacuum only (no high-vacuum stage).
+- No cold shroud — the chamber walls were at room temperature, so "deep space" was not represented.
+- No solar / IR simulation lamp.
+- Small number of thermocouple channels (4–6); no high-channel-count correlation exercise.
+
+## Next Step (Rev 6)
+
+The preliminary data and workflow from these benchtop runs feed into the Rev 6 test plan, which covers a proper TVAC campaign: LN₂-shrouded chamber, calibrated IR lamp for solar simulation, ≥32 thermocouple channels, and a quantitative model-vs-measurement correlation band across the battery, Jetson TX2, Iridium 9603, and the integrated 2U flat-sat.
 
 ## References
 
-1. NASA GSFC, *General Environmental Verification Standard (GEVS)*, GSFC-STD-7000.
-2. NASA Ames, *Small Spacecraft Thermal Modeling Guide* (see `docs/03-methodology.md` references).
-3. ECSS-E-ST-10-03C, *Space engineering — Testing*, European Cooperation for Space Standardization, 2012.
+1. NASA GSFC, *General Environmental Verification Standard (GEVS)*, GSFC-STD-7000 — background on flight TVAC practice.
+2. NASA Ames, *Small Spacecraft Thermal Modeling Guide* — see [`docs/03-methodology.md`](03-methodology.md).

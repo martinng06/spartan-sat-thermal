@@ -39,11 +39,24 @@ The sun-facing panel is the hottest exterior surface. Interior components are th
 
 See `figures/hot-cold-case-bar.png` for the visual.
 
-## Key Finding
+## Key Finding (Rev 5)
 
-The Rev 5 bare-anodize design **fails the hot case on the battery and Iridium comms module** by a meaningful margin. This is exactly the result the simulation is designed to produce: it tells the design team that a passive-only bare-aluminum exterior is not sufficient and **active or coating-based thermal control is required**.
+The Rev 5 bare-anodize design exceeds the battery operational band in both hot and cold cases. This is exactly the result the simulation is designed to produce: it tells the design team that a passive-only bare-aluminum exterior is not sufficient and **coating-based thermal control plus a survival heater is required**.
 
-The planned next step is a design revision adding a low-α / high-ε coating patch (NZOT white paint or silvered FEP film — see `docs/04`) on the +Z panel to knock down absorbed solar on the sun-view face, with the battery thermally strapped to a cold interior panel.
+## Rev 6 — Coating Patch + Survival Heater
+
+Rev 6 applies a NZOT white-paint patch (α ≈ 0.11, ε ≈ 0.90) to the +Z (sun-facing) panel and adds a low-duty-cycle resistive heater on the battery compartment. The same hot / cold orbit cases were re-run:
+
+| Metric | Hot case | Cold case |
+|--------|---------:|----------:|
+| Final panel average | ~33 °C | ~8 °C |
+| Battery op margin (40 °C hot, 0 °C cold) | **+7 °C** | **+8 °C** |
+| Jetson TX2 op margin | +47 °C | — |
+| Iridium 9603 op margin | +37 °C | — |
+
+With the coating + heater control applied, all four binding components stay inside their operational bands across both bounding orbit cases, with ≥5 °C margin against each operational limit.
+
+The physical intuition: swapping α from 0.61 (Type III gray anodize) to 0.11 (NZOT white) cuts absorbed solar on the +Z panel by ~5.5× while leaving emissivity high, shifting the radiation balance strongly in favor of cooling. The battery heater picks up the remaining cold-case deficit at low duty cycle.
 
 ## Earlier Revisions
 
@@ -56,13 +69,3 @@ For the 2U Baseline Rev 2 case (bare Type III anodize, less detailed mesh, simpl
 
 These results confirmed the directional finding (hot-case too hot for battery), drove the Rev 3–5 mesh refinement and coating trade-study work, and established the regression dataset that Rev 5 was checked against. See `docs/06-design-evolution.md`.
 
-## How to Reproduce the Figures
-
-```bash
-cd analysis
-pip install -r requirements.txt
-python plot_orbital_loads.py
-python hot_cold_case_summary.py
-```
-
-Both scripts read the CSV / XLSX files in `data/` and write PNGs into `figures/`.
