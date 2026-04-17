@@ -1,0 +1,7 @@
+component,heat_output_hot_W,heat_output_cold_W,op_min_C,op_max_C,survival_min_C,survival_max_C,driver
+Battery (Cannon BP955),0.17,0.17,0,40,-20,60,Charge/discharge efficiency and cell life
+Jetson TX2,15.0,12.0,-25,80,-40,85,Silicon junction temperature
+Iridium 9603,0.8,0.8,-30,70,-40,85,IC derating
+Camera,1.5,0.0,-20,60,-30,70,Sensor noise and dark current
+SDR,3.5,1.0,-20,70,-40,85,RF component derating
+Solar panel (external),0.0,0.0,-40,85,-65,100,Cell efficiency vs temperature

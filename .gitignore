@@ -1,0 +1,38 @@
+# ANSYS Workbench working files
+*.wbpj
+*.wbpz
+*_files/
+dp0/
+SYS/
+
+# Thermal Desktop / RadCAD binaries
+*.hra
+*.rck
+*.rch
+*.rco
+*.tdp
+*.k
+*.ar
+*.sin
+
+# SolidWorks / SpaceClaim work files
+*.scdoc
+*.scdocx
+
+# Office lock files
+~$*
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Local editor
+.vscode/
+.idea/
