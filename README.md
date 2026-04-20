@@ -6,7 +6,7 @@
 
 - **Mission:** 2U CubeSat, ISS deployment to Low Earth Orbit (~400 km)
 - **Technology stack:** Thermal Desktop + Sinda, SolidWorks, Python
-- **Headline finding:** The bare Type III gray anodize 2U design reaches **~47 °C panel average in the hot case** — 3 of 4 binding components pass their operational limits with healthy margin. The battery exceeds its 40 °C ceiling by 4 °C, identifying it as the design driver. Coating trades on the +Z panel are being evaluated to close the gap, and design iterations are continuing from this baseline.
+- **Headline finding:** The bare Type III gray anodize 2U design reaches ~47 °C panel average in the hot case as 3 of 4 binding components pass their operational limits with healthy margin. The battery exceeds its 40 °C ceiling by 4 °C.
 
 ## Contents
 
@@ -83,7 +83,8 @@ Five design revisions were carried out and each revision was addressed a flaw in
   <img src="figures/cubesat_rev4.png" width="48%" />
 </p>
 
-Left: early Rev 1 temperature field — coarse mesh, narrow range, used to verify radiative boundary conditions. Right: Rev 4 temperature field — fine mesh across the full 2U assembly with internal components included, showing the full thermal gradient from sun-lit to shaded surfaces.
+Left: early Rev 1 temperature field: coarse mesh, narrow range, used to verify radiative boundary conditions.\
+ Right: Rev 4 temperature field: fine mesh across the full 2U assembly with internal components included, showing the full thermal gradient from sun-lit to shaded surfaces.
 
 ## Thermal Vacuum Testing
 
@@ -94,7 +95,8 @@ Preliminary component-level thermal-vacuum tests were performed on a benchtop va
   <img src="figures/tvac_2.png" width="30%" />
 </p>
 
-Left: electronics test article instrumented with type-T thermocouples on the baseplate inside the chamber. Right: bell-jar vacuum chamber pulled down to rough vacuum for the test run.
+Left: electronics test article instrumented with type-T thermocouples on the baseplate inside the chamber.\
+Right: bell-jar vacuum chamber pulled down to rough vacuum for the test run.
 
 ## Contact
 

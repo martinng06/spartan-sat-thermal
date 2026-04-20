@@ -10,7 +10,7 @@ Testing was conducted using a benchtop bell-jar vacuum chamber. Chamber pressure
   <img src="../figures/tvac_2.png" width="40%" />
 </p>
 
-Temperature data was collected using **type-T thermocouples** (4–6 channels per run) bonded with Kapton tape to the test articles and the chamber baseplate. A handheld DAQ logged thermocouple readings at ~1 Hz throughout each run.
+Temperature data was collected using type-T thermocouples (4–6 channels per run) bonded with Kapton tape to the test articles and the chamber baseplate. A handheld DAQ logged thermocouple readings at ~1 Hz throughout each run.
 
 ## Test Articles
 
