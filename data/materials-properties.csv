@@ -1,17 +1,17 @@
 material,category,alpha_BOL,epsilon_BOL,supplier,relative_cost,notes
-Silvered FEP (Ag-FEP),film,0.08,0.70,Dunmore / Sheldahl,high,Gold-standard passive radiator film
-ITO-coated Ag-FEP,film,0.08,0.70,Dunmore,high,Conductive variant for ESD control
+Silvered FEP (Ag-FEP),film,0.08,0.7,Dunmore / Sheldahl,high,Gold-standard passive radiator film
+ITO-coated Ag-FEP,film,0.08,0.7,Dunmore,high,Conductive variant for ESD control
 Aluminized Kapton (VDA Kapton),film,0.35,0.15,Dunmore / Sheldahl,medium,Low-epsilon insulator; poor radiator face
 Acktar White film,film,0.35,0.75,Acktar / Edmund Optics,medium,Flexible high-epsilon white skin
 Acktar Metal Velvet (black),film,0.98,0.98,Acktar / Edmund Optics,medium,Internals / shade; runs hot in sun
 S13GP:6N/LO-1,paint,0.18,0.88,HII AMCL,low,White ZnO; plan EOL darkening
-NZOT / DNZOT,paint,0.11,0.90,HII AMCL,low-medium,Strong 2U sun-view radiator candidate
-YB-71P,paint,0.13,0.90,HII AMCL,medium,Heritage ZOT radiator paint
+NZOT / DNZOT,paint,0.11,0.9,HII AMCL,low-medium,Strong 2U sun-view radiator candidate
+YB-71P,paint,0.13,0.9,HII AMCL,medium,Heritage ZOT radiator paint
 D21:6N/LO,paint,0.96,0.91,HII AMCL,low,Siloxane black; interior / shade only
 Aeroglaze Z306,paint,0.95,0.88,Socomore,medium,Flight-heritage black polyurethane
-Clear anodize Type II,anodize,0.40,0.80,Aerospace finisher,low,Neutral AO-resistant exterior
-Black anodize Type III,anodize,0.90,0.80,Aerospace finisher,low,Hot in sun; good for internals
+Clear anodize Type II,anodize,0.4,0.8,Aerospace finisher,low,Neutral AO-resistant exterior
+Black anodize Type III,anodize,0.9,0.8,Aerospace finisher,low,Hot in sun; good for internals
 Chromate conversion (Alodine),anodize,0.25,0.15,Aerospace finisher,low,Conductive low-epsilon insulator
-Polished aluminum,bare,0.10,0.08,Shop finish,low,Oxidizes in LEO unless protected
+Polished aluminum,bare,0.1,0.08,Shop finish,low,Oxidizes in LEO unless protected
 Type III gray anodize (current baseline),anodize,0.61,0.85,Aerospace finisher,low,Conservative baseline surface finish
-Bare Al 6061 (modeled reference),bare,0.25,0.05,-,-,Used as reference case for trade study
+Bare Al 6061 ,bare,0.25,0.05,-,-,Used as reference case for trade study
